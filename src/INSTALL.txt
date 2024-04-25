@@ -1,0 +1,42 @@
+https://www.cloudns.net/wiki/article/176/
+
+1. Create a new table in your WHMCS database. You can use the following command through phpmyadmin:
+CREATE TABLE IF NOT EXISTS `mod_cloudns_zones` (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `serviceid` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `zone_name` (`name`)
+) ENGINE=InnoDB;
+
+2. Place the module folder (extract the archive) in the servers directory of your WHMCS instalation. Example:
+/path/to/whmcs/modules/servers/
+
+3. Open /path/to/whmcs/modules/servers/cloudns/cloudns_core/configuration.php with a text editor and enter your auth-id and auth-password on rows 6 and 7:
+public static $_apiAuthId =  0; // your ClouDNS API ID
+public static $_apiAuthPassword = 'XXXXXX'; // your ClouDNS API password
+
+If you want all products to use the same server names (different from the default ClouDNS ones) you can uncoment the $_DnsServers block in the config file and add the server names using the given two examples. If the block is commented out all products will be using the default servers, unless you specify different name servers for the different products in the Product settings. Note that the servers in the config file is with higher priority than the servers you will add per product.
+
+For the other options see below.
+
+4. Create new Product/Service for DNS hosting and from the Module Settings tab choose ClouDNS DNS Manager as Module name.
+
+5. Enter the amount of DNS zones this product will allow each customer to manage.
+
+6. Save the changes.
+
+
+
+Configuring a (free) product for DNS management of registered domains:
+
+1. Create new Product/Service for DNS hosting and from the Module Settings tab choose ClouDNS DNS Manager as Module name. Remember the ID of the product, you will need it in Step 3
+
+2. Tick the Registered Domains checkbox, this will allow only registered domains in your system to have DNS zones in this service and the limit will be the amount of registered domains the customer has.
+
+3. Open /path/to/whmcs/modules/servers/cloudns/cloudns_core/configuration.php with a text editor and enter an admin username (line 22), who has API access. The permissions for that can be granted to the group the admin is in from WHMCS admin panel > Setup > Staff Managament > Administrator Users / Administrator Roles.
+After that enter the ID on line 30. Save the file.
+
+4. Move the file /path/to/whmcs/modules/servers/cloudns/cloudns_core/hooks/cloudns.php in /path/to/whmcs/includes/hooks/cloudns.php
+
+Now when a customer registers a domain name (and when the domain is actually registered, not just an order is placed) the customer will be checked if has access to the product you created in Step 1 and if not the service will be activated for him. All domains registered with you will be shown in this Service, if there is no DNS zone for a particular domain name it will be created the first time the customer try to manage it and will be redirected automatically to it's control panel.

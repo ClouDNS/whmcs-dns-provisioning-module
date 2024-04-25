@@ -1,0 +1,52 @@
+/*{literal}*/
+.notification {
+background-color: #dbe3ff;
+border-color: #a2b4ee;
+color: #585b66;
+display:block;
+font-style:normal;
+padding: 10px 10px 10px 36px;
+line-height: 1.5em;
+}
+
+.addNewRecord, .editNewRecord {
+width: 102px;
+}
+.ttl {
+width: 50px;
+}
+form.recordsForm select,
+.inputTitle,
+#addRecordHost, #editRecordHost,
+.RP_fields div, .RP_fields input,
+.MX_fields input {
+width: 49%;
+}
+
+.inputSRV {
+width: 32.7%;
+margin-left: 8px;
+}
+.SRV_fields .noMargin {
+margin: 0;
+}
+.pointsTo {
+width: 100%;
+}
+.importForm table th {
+width: 100px;
+}
+.importForm textarea {
+width: 100%;
+height: 600px;
+}
+.clear {
+clear: both;
+}
+.pointer {
+cursor: pointer;
+}
+.newZoneContainer label {
+text-align: left;	
+}
+/*{/literal}*/
