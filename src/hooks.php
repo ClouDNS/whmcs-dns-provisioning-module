@@ -1,4 +1,5 @@
 <?php
+use Illuminate\Database\Capsule\Manager as Capsule;
 
 add_hook('ClientAreaPrimarySidebar', 1, function ($menu) {
 	// Check whether the services menu exists.
@@ -15,5 +16,20 @@ add_hook('ClientAreaPrimarySidebar', 1, function ($menu) {
 		$menu->getChild('Service Details Overview')
 			->removeChild('Information');
 	}
+
+// add "DNS Management" button in clientarea.php?action=domaindetails&id=x
+	if (!is_null($menu->getChild('Domain Details Management'))) {
+	    $domainId = intval($_GET['id']);
+	    $domainDetails = Capsule::table('tbldomains')
+            ->where('id', $domainId)
+            ->first();
+	    $domainName = $domainDetails->domain;	
+        $menu->getChild('Domain Details Management')
+        ->addChild('DNS Management')
+        ->setLabel('DNS Management')
+        ->setUri('/clientarea.php?action=productdetails&id=1&customAction=zone-settings&zone='.$domainName)
+        ->setOrder(100);
+    }
+
 });
 
