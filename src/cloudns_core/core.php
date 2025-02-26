@@ -53,8 +53,8 @@ class Cloudns_Core {
 			'registeredDomains'=>$params['configoption3'],	// 'on' or empty, if 'on' number of zones is ignored
 			'templateZone'=>$params['configoption4'],	// domain name or empty, if not empty new zones will be added with its records
 			'failoverChecks'=>$params['configoption5'],	// number of Failover chekcs
-			'moduleVersion'=>'1.7',
-			'page'=>$_GET['customAction'],
+			'recordsLimit' => $params['configoption6'],	// limit of records
+			'moduleVersion'=>'1.8',
 			'productid'=>$params['pid'],
 		);
 	}

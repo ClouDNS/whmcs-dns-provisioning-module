@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ClouDNS DNS Manager v1.6
+ * ClouDNS DNS Manager v1.8
  */
 
 if (!defined("WHMCS")) {
@@ -76,6 +76,12 @@ function cloudns_ConfigOptions($params) {
 			'Description' => '<br />Zone to be used as records template for new zones.',
 		),
 		'DNS Failover checks' => $foDescription,
+		'Records' => array(
+			'Type' => 'text',
+			'Size' => '25',
+			'Default' => '-1',
+			'Description' => '<br />How many records are supported for a DNS zone. Use -1 for unlimited'
+		),
 	);
 }
 
@@ -221,7 +227,7 @@ function cloudns_ClientArea ($params) {
 		
 		if (!empty($zone)) {
 			$zoneExists = $cloudns->Controller->zoneExists($zone);
-
+			
 			if (isset($zoneExists['status']) && ($requestedAction != 'add-existing-zone' && $requestedAction != 'add-zone')) {
 				// the zone doesn't exist in ClouDNS
 				if ($zoneExists['status'] == 'error' || $zoneExists['status'] == 'info') {
@@ -283,7 +289,7 @@ function cloudns_ClientArea ($params) {
 		if ($requestedAction == 'add-zone') {
 			$zoneType = $cloudns->Helper->getPost('zoneType');
 			
-			$servers = $cloudns->Helper->getPost('masterDNSServer');
+			$servers = $cloudns->Helper->getPost('masterDNSServer', array());
 			if ($cloudns->Controller->defaultZone()) {
 				$option = 3;
 			} else {
@@ -338,6 +344,10 @@ function cloudns_ClientArea ($params) {
 			$failoverChecks = $params['configoption5'];
 			$productid = $params['pid'];
 			$type = 'all';
+			$recordsCount = $cloudns->Controller->getRecordsCount($zone);
+			$recordsLimit = $params['configoption6'];
+			$error = $cloudns->Helper->getGet('error');
+			
 			if (in_array($cloudns->Helper->getPost('recordsType'), $recordTypes)) {
 				$type = $cloudns->Helper->getPost('recordsType');
 			} elseif (in_array($cloudns->Helper->getGet('type'), $recordTypes)) {
@@ -351,8 +361,11 @@ function cloudns_ClientArea ($params) {
 			}
 			
 			$templateVariables = $cloudns->Actions->getSettings($zoneInfo, $type, $recordTypes, $failoverChecks, $productid);
+			$templateVariables['recordsCount'] = $recordsCount;
+			$templateVariables['recordsLimit'] = $recordsLimit;
+			$templateVariables['error'] = $error;
 			
-			if (isset($templateVariables['response']) && isset($templateVariables['response']['status']) && $templateVariables['response']['status'] == 'error') {
+			if (isset($templateVariables['response']) && isset($templateVariables['response']['status']) && ($templateVariables['response']['status'] == 'error' || $templateVariables['response']['status'] == '0')) {
 				$templateFile = 'templates/zone-error.tpl';
 			}
 			
@@ -381,8 +394,12 @@ function cloudns_ClientArea ($params) {
 		
 		} elseif ($requestedAction == 'add-new-record') {
 			$templateVariables = $cloudns->Actions->addNewRecord($zoneInfo, $cloudns->Helper->getRequest('type'));
-			$templateFile = 'templates/add-new-record.tpl';
 			
+			if ($templateVariables['status'] == 'error') {
+				$cloudns->Helper->redirect("clientarea.php?action=productdetails&id={$params['serviceid']}&customAction=zone-settings&zone={$zoneInfo['name']}&error=1");
+			} else {
+				$templateFile = 'templates/add-new-record.tpl';
+			}
 		} elseif ($requestedAction == 'add-record') {
 			$recordType = $cloudns->Helper->getRequest('addRecordType');
 			$settings = array();
@@ -499,8 +516,9 @@ function cloudns_ClientArea ($params) {
 				$settings['backup_ip_3'] = $cloudns->Helper->getPost('fo_backup_ip_3');
 				$settings['backup_ip_4'] = $cloudns->Helper->getPost('fo_backup_ip_4');
 				$settings['backup_ip_5'] = $cloudns->Helper->getPost('fo_backup_ip_5');
+				$settings['ping_threshold'] = $cloudns->Helper->getPost('fo_ping_threshold');
 				$settings['monitoring_region'] = $cloudns->Helper->getPost('fo_monitoring_region');
-				if ($settings['check_type'] === '4' || $settings['check_type'] === '5' || $settings['check_type'] === '6' || $settings['check_type'] === '7') {
+				if ($settings['check_type'] === '18') {
 					$settings['host'] = $cloudns->Helper->getPost('fo_http_host');
 					$settings['port'] = $cloudns->Helper->getPost('fo_http_port');
 				} else {
@@ -508,11 +526,17 @@ function cloudns_ClientArea ($params) {
 					$settings['port'] = $cloudns->Helper->getPost('fo_port');
 				}
 				$settings['path'] = $cloudns->Helper->getPost('fo_http_path');
-				$settings['content'] = $cloudns->Helper->getPost('fo_http_content');
 				$settings['query_type'] = $cloudns->Helper->getPost('fo_dns_type');
 				$settings['query_response'] = $cloudns->Helper->getPost('fo_dns_response');
 				$settings['notification_type'] = $cloudns->Helper->getPost('fo_notification_type');
 				$settings['notification_value'] = $cloudns->Helper->getPost('fo_notification_value');
+				
+				if ($settings['check_type'] === '18') {
+					if ($cloudns->Helper->getPost('web_custom_string') == '1') {
+						$settings['content'] = htmlspecialchars($cloudns->Helper->getPost('fo_http_content'));
+					}
+					$settings['http_protocol'] = $cloudns->Helper->getPost('web_protocol');
+				}
 
 				$templateVariables = $cloudns->Actions->activateFailover($zoneInfo, $record_id, $settings);
 				$templateFile = 'templates/failover-new.tpl';
@@ -546,16 +570,24 @@ function cloudns_ClientArea ($params) {
 				$settings['backup_ip_3'] = $cloudns->Helper->getPost('fo_backup_ip_3');
 				$settings['backup_ip_4'] = $cloudns->Helper->getPost('fo_backup_ip_4');
 				$settings['backup_ip_5'] = $cloudns->Helper->getPost('fo_backup_ip_5');
+				$settings['ping_threshold'] = $cloudns->Helper->getPost('fo_ping_threshold');
 				$settings['monitoring_region'] = $cloudns->Helper->getPost('fo_monitoring_region');
-				if ($settings['check_type'] === '4' || $settings['check_type'] === '5' || $settings['check_type'] === '6' || $settings['check_type'] === '7') {
+				if ($settings['check_type'] === '18') {
 					$settings['host'] = $cloudns->Helper->getPost('fo_http_host');
 					$settings['port'] = $cloudns->Helper->getPost('fo_http_port');
 				} else {
 					$settings['host'] = $cloudns->Helper->getPost('fo_dns_host');
 					$settings['port'] = $cloudns->Helper->getPost('fo_port');
 				}
+				
+				if ($settings['check_type'] === '18') {
+					if ($cloudns->Helper->getPost('web_custom_string') == '1') {
+						$settings['content'] = $cloudns->Helper->getPost('fo_http_content');
+					}
+					$settings['http_protocol'] = $cloudns->Helper->getPost('web_protocol');
+				}
+				
 				$settings['path'] = $cloudns->Helper->getPost('fo_http_path');
-				$settings['content'] = $cloudns->Helper->getPost('fo_http_content');
 				$settings['query_type'] = $cloudns->Helper->getPost('fo_dns_type');
 				$settings['query_response'] = $cloudns->Helper->getPost('fo_dns_response');
 
@@ -903,7 +935,7 @@ function cloudns_ClientArea ($params) {
 		$templateVariables['version']=$version[0];
 		$templateVariables['theme'] = $params['clientareatemplate'];
 		$templateVariables['registeredDomains'] = $params['configoption3'];
-		
+				
 		// returning the template
 		return array(
 			'tabOverviewReplacementTemplate' => $templateFile,

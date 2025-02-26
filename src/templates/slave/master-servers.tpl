@@ -23,7 +23,7 @@
 {if $version gte '6'}
 	{assign var="path" value="./assets/img/"}
 {/if}
-
+<div class="text-right">Records count: {$recordsCount}</div>
 <table class="table table-hover pull-left masterServers">
 
 <tbody>

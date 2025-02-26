@@ -26,14 +26,16 @@ list-style-type: none;
 {/literal}
 </style>
 
-{if isset($response.status) && $response.status=='error'}
+{if isset($response.status) && ($response.status=='error' || $response.status=='0')}
 <div class="notification">{$response.description}</div><br />
 {/if}
 
 <ul class="backToZones pull-right"><li><a href="clientarea.php?action=productdetails&id={$serviceid}" >back to the DNS zones list</a></li></ul>
 <div class="clear"></div>
 
+{if isset($response.status) && $response.status!='0'}
 <form action="clientarea.php?action=productdetails&id={$serviceid}&customAction=add-existing-zone" method="post">
 	<input type="hidden" name="zone" id="zone" value="{$zone}" />
 	<input type="submit" name="" value="Add {$zone} to the DNS servers" class="btn btn-primary btn-input-padded-responsive" />
 </form>
+{/if}

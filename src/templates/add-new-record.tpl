@@ -174,7 +174,7 @@
 
 	</select>
 	<div class="pull-left inputTitle fleft mTitle"><br>TTL:</div>
-	<select id="addRecordTtl" name="addRecordTtl" class="pull-right form-control">
+	<select id="addRecordTtl" name="addRecordTtl" class="pull-left form-control">
 		{foreach from=$ttls key=key item=value}
 		<option value="{$value}"{if isset($settings.ttl) && $settings.ttl == $value} selected="selected"{elseif !isset($settings.ttl) && $value == '3600'} selected="selected"{/if}>{$key}</option>
 		{/foreach}
@@ -386,7 +386,7 @@
 		<div class="inputTitle records-label">Points to:</div>
 		<div class="inputTitle OPENPGPKEY_fields type_fields">PGP key:</div>
 		<div class="inputTitle SMIMEA_fields type_fields">Certificate:</div>
-		<input type="text" id="addRecordRecord" name="addRecordRecord" value="{if isset($settings.record)}{$settings.record}{/if}" class="pointsTo form-control" autocapitalize="off" spellcheck="false"/> <span class="WR_fields type_fields"><small>Example: http://google.com</small></span><br /><br />
+		<input type="text" id="addRecordRecord" name="addRecordRecord" value="{if isset($settings.record)}{$settings.record|@htmlspecialchars}{/if}" class="pointsTo form-control" autocapitalize="off" spellcheck="false"/> <span class="WR_fields type_fields"><small>Example: http://google.com</small></span><br /><br />
 	</div>
 	
 	<div class="WR_fields type_fields">
@@ -417,9 +417,9 @@
 		<div class="pull-right inputTitle fright dTitle">TXT record:</div>
 		<div class="clear"></div>
 		<div class="pull-left inputTitle fleft mTitle">Responsible person (E-mail):</div>
-		<input type="text" id="addRecordMail" name="addRecordMail" value="{$settings.mail}" class="form-control pull-left fleft" autocapitalize="off" spellcheck="false"/>
+		<input type="text" id="addRecordMail" name="addRecordMail" value="{$settings.mail|@htmlspecialchars}" class="form-control pull-left fleft" autocapitalize="off" spellcheck="false"/>
 		<div class="pull-right inputTitle fleft mTitle"><br>TXT record:</div>
-		<input type="text" id="addRecordTxt" name="addRecordTxt" value="{$settings.txt}" class="form-control pull-right fright" autocapitalize="off" spellcheck="false"/><br class="clear" /><br />
+		<input type="text" id="addRecordTxt" name="addRecordTxt" value="{$settings.txt|@htmlspecialchars}" class="form-control pull-right fright" autocapitalize="off" spellcheck="false"/><br class="clear" /><br />
 	</div>
 	
 	<div class="CAA_fields type_fields" style="display:none;">
@@ -444,7 +444,7 @@
 		<div class="fleft inputSRV inputTitle dTitle">Value: <img src="./assets/img/help.gif" class="showTitle mobileInfo" title="The value given from your preferred CA or a value of your choice. It can be the CA hostname or mailto:you@your-mail.com, it depends on the Type and your needs." alt="[?]" /></div>
 		<div class="fleft inputSRV inputTitle mTitle">Value: <img src="./assets/img/help.gif" class="showTitle mobileInfo mTooltip" rel="popover" data-content="The value given from your preferred CA or a value of your choice. It can be the CA hostname or mailto:you@your-mail.com, it depends on the Type and your needs." alt="[?]" /></div>
 		<br />
-		<input type="text" id="addRecordCAAvalue" name="addRecordCAAvalue" value="{$settings.caa_value}" class="form-control input-text addRecordField pointsTo" autocapitalize="off" spellcheck="false"/>
+		<input type="text" id="addRecordCAAvalue" name="addRecordCAAvalue" value="{$settings.caa_value|@htmlspecialchars}" class="form-control input-text addRecordField pointsTo" autocapitalize="off" spellcheck="false"/>
 		<br class="clear" /><br />
 	</div>
 	
@@ -453,9 +453,9 @@
 		<div class="pull-right inputTitle fright dTitle">OS:</div>
 		<div class="clear"></div>
 		<div class="pull-left inputTitle fleft mTitle">CPU:</div>
-		<input type="text" id="addRecordCPU" name="addRecordCPU" value="{$settings.cpu}" class="form-control pull-left fleft" autocapitalize="off" spellcheck="false"/>
+		<input type="text" id="addRecordCPU" name="addRecordCPU" value="{$settings.cpu|@htmlspecialchars}" class="form-control pull-left fleft" autocapitalize="off" spellcheck="false"/>
 		<div class="pull-right inputTitle fleft mTitle"><br>OS:</div>
-		<input type="text" id="addRecordOS" name="addRecordOS" value="{$settings.os}" class="form-control pull-right fright" autocapitalize="off" spellcheck="false"/><br class="clear" /><br />
+		<input type="text" id="addRecordOS" name="addRecordOS" value="{$settings.os|@htmlspecialchars}" class="form-control pull-right fright" autocapitalize="off" spellcheck="false"/><br class="clear" /><br />
 	</div>
 	
 	<div class="LOC_fields type_fields">
@@ -468,11 +468,11 @@
 		<div class="pull-right inputTitle fleft dTitle titleLOC">Direction:</div>
 		<div class="clear"></div>
 		<div class="pull-left inputTitle fleft mTitle">Degrees: <img src="./assets/img/help.gif" class="showTitle mobileInfo" title="0 - 90" alt="[?]" /></div>
-		<input type="text" id="addRecordLatDeg" name="addRecordLatDeg" value="{$settings['lat-deg']}" class="form-control pull-left fleft inputFirstLOC" autocapitalize="off" spellcheck="false"/>
+		<input type="text" id="addRecordLatDeg" name="addRecordLatDeg" value="{$settings['lat-deg']|@htmlspecialchars}" class="form-control pull-left fleft inputFirstLOC" autocapitalize="off" spellcheck="false"/>
 		<div class="pull-left inputTitle fleft mTitle">Minutes: <img src="./assets/img/help.gif" class="showTitle mobileInfo" title="0 - 59 If omitted will default to 0." alt="[?]" /></div>
-		<input type="text" id="addRecordLatMin" name="addRecordLatMin" value="{$settings['lat-min']}" class="form-control pull-left fleft inputLOC" autocapitalize="off" spellcheck="false"/>
+		<input type="text" id="addRecordLatMin" name="addRecordLatMin" value="{$settings['lat-min']|@htmlspecialchars}" class="form-control pull-left fleft inputLOC" autocapitalize="off" spellcheck="false"/>
 		<div class="pull-left inputTitle fleft mTitle">Seconds: <img src="./assets/img/help.gif" class="showTitle mobileInfo" title="0 - 59.999 If omitted will default to 0." alt="[?]" /></div>
-		<input type="text" id="addRecordLatSec" name="addRecordLatSec" value="{$settings['lat-sec']}" class="form-control pull-left fleft inputLOC" autocapitalize="off" spellcheck="false"/>
+		<input type="text" id="addRecordLatSec" name="addRecordLatSec" value="{$settings['lat-sec']|@htmlspecialchars}" class="form-control pull-left fleft inputLOC" autocapitalize="off" spellcheck="false"/>
 		<div class="pull-right inputTitle fleft mTitle selectLOC">Direction:</div>
 		<select id="addRecordLatDir" name="addRecordLatDir" class="form-control inputTitle selectLOC">
 			<option value="N" {if $settings['lat-dir'] == 'N'}selected="selected"{/if}>North</option>
@@ -490,11 +490,11 @@
 		<div class="pull-right inputTitle fleft dTitle titleLOC">Direction:</div>
 		<div class="clear"></div>
 		<div class="pull-left inputTitle fleft mTitle">Degrees: <img src="./assets/img/help.gif" class="showTitle mobileInfo" title="0 - 180" alt="[?]" /></div>
-		<input type="text" id="addRecordLongDeg" name="addRecordLongDeg" value="{$settings['long-deg']}" class="form-control pull-left fleft inputFirstLOC" autocapitalize="off" spellcheck="false"/>
+		<input type="text" id="addRecordLongDeg" name="addRecordLongDeg" value="{$settings['long-deg']|@htmlspecialchars}" class="form-control pull-left fleft inputFirstLOC" autocapitalize="off" spellcheck="false"/>
 		<div class="pull-left inputTitle fleft mTitle">Minutes: <img src="./assets/img/help.gif" class="showTitle mobileInfo" title="0 - 59 If omitted will default to 0." alt="[?]" /></div>
-		<input type="text" id="addRecordLongMin" name="addRecordLongMin" value="{$settings['long-min']}" class="form-control pull-left fleft inputLOC" autocapitalize="off" spellcheck="false"/>
+		<input type="text" id="addRecordLongMin" name="addRecordLongMin" value="{$settings['long-min']|@htmlspecialchars}" class="form-control pull-left fleft inputLOC" autocapitalize="off" spellcheck="false"/>
 		<div class="pull-left inputTitle fleft mTitle">Seconds: <img src="./assets/img/help.gif" class="showTitle mobileInfo" title="0 - 59.999 If omitted will default to 0." alt="[?]" /></div>
-		<input type="text" id="addRecordLongSec" name="addRecordLongSec" value="{$settings['long-sec']}" class="form-control pull-left fleft inputLOC" autocapitalize="off" spellcheck="false"/>
+		<input type="text" id="addRecordLongSec" name="addRecordLongSec" value="{$settings['long-sec']|@htmlspecialchars}" class="form-control pull-left fleft inputLOC" autocapitalize="off" spellcheck="false"/>
 		<div class="pull-right inputTitle fleft mTitle">Direction:</div>
 		<select id="addRecordLongDir" name="addRecordLongDir" class="form-control inputTitle selectLOC">
 			<option value="W" {if $settings['long-dir'] == 'W'}selected="selected"{/if}>West</option>
@@ -512,13 +512,13 @@
 		<div class="pull-right inputTitle fleft dTitle titleLOC">Vertical: <img src="./assets/img/help.gif" class="showTitle mobileInfo" title="0 - 90000000.00 If omitted, vertical precision defaults to 10." alt="[?]" /></div>
 		<div class="clear"></div>
 		<div class="pull-left inputTitle fleft mTitle">Altitude: <img src="./assets/img/help.gif" class="showTitle mobileInfo" title="-100000.00 - 42849672.95" alt="[?]" /></div>
-		<input type="text" id="addRecordAltitude" name="addRecordAltitude" value="{$settings['altitude']}" class="form-control pull-left fleft inputFirstLOC" autocapitalize="off" spellcheck="false"/>
+		<input type="text" id="addRecordAltitude" name="addRecordAltitude" value="{$settings['altitude']|@htmlspecialchars}" class="form-control pull-left fleft inputFirstLOC" autocapitalize="off" spellcheck="false"/>
 		<div class="pull-left inputTitle fleft mTitle">Size: <img src="./assets/img/help.gif" class="showTitle mobileInfo" title="0 - 90000000.00 If omitted, size defaults to 1." alt="[?]" /></div>
-		<input type="text" id="addRecordSize" name="addRecordSize" value="{$settings['size']}" class="form-control pull-left fleft inputLOC" autocapitalize="off" spellcheck="false"/>
+		<input type="text" id="addRecordSize" name="addRecordSize" value="{$settings['size']|@htmlspecialchars}" class="form-control pull-left fleft inputLOC" autocapitalize="off" spellcheck="false"/>
 		<div class="pull-left inputTitle fleft mTitle">Horizontal: <img src="./assets/img/help.gif" class="showTitle mobileInfo" title="0 - 90000000.00 If omitted, horizontal precision defaults to 10000." alt="[?]" /></div>
-		<input type="text" id="addRecordHPrecision" name="addRecordHPrecision" value="{$settings['h-precision']}" class="form-control pull-left fleft inputLOC" autocapitalize="off" spellcheck="false"/>
+		<input type="text" id="addRecordHPrecision" name="addRecordHPrecision" value="{$settings['h-precision']|@htmlspecialchars}" class="form-control pull-left fleft inputLOC" autocapitalize="off" spellcheck="false"/>
 		<div class="pull-right inputTitle fleft mTitle"><br>Vertical: <img src="./assets/img/help.gif" class="showTitle mobileInfo" title="0 - 90000000.00 If omitted, vertical precision defaults to 10." alt="[?]" /></div>
-		<input type="text" id="addRecordVPrecision" name="addRecordVPrecision" value="{$settings['v-precision']}" class="form-control pull-right fright inputLOC" autocapitalize="off" spellcheck="false"/><br class="clear" /><br />
+		<input type="text" id="addRecordVPrecision" name="addRecordVPrecision" value="{$settings['v-precision']|@htmlspecialchars}" class="form-control pull-right fright inputLOC" autocapitalize="off" spellcheck="false"/><br class="clear" /><br />
 	</div>
 
 	<input type="submit" name="do_save" value="Save" class="btn btn-primary btn-input-padded-responsive" />

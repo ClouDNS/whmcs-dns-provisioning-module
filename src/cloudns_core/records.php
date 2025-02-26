@@ -101,5 +101,17 @@ Class Cloudns_Records {
 
 		return $response;
 	}
+	
+	public function getRecordsCount ($zone) {
+		$request = array('domain-name'=>$zone);
+		
+		$response = $this->core->Api->call('dns/get-records-count.json', $request);
+		
+		if (isset($response['status']) && $response['status'] == 0) {
+			return array();
+		}
+		
+		return $response;
+	}
 }
 

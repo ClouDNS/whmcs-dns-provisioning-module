@@ -21,10 +21,10 @@ class Cloudns_Api {
 		$auth_id = $this->core->Configuration->getApiUser();
 		$auth_password = $this->core->Configuration->getApiPassword();
 		$authData = array('auth-id' => $auth_id , 'auth-password' => $auth_password);
-		
 		$request = http_build_query(array_merge($authData, $data));
+		$action = $url;
 		
-		$url = 'https://apidev.cloudns.net/' . $url;
+		$url = 'https://api.cloudns.net/' . $url;
 		
 		$init = curl_init();
 		curl_setopt($init, CURLOPT_SSL_VERIFYPEER, FALSE);
@@ -32,13 +32,17 @@ class Cloudns_Api {
 		curl_setopt($init, CURLOPT_URL, $url);
 		curl_setopt($init, CURLOPT_POST, true);
 		curl_setopt($init, CURLOPT_POSTFIELDS, $request);
-		curl_setopt($init, CURLOPT_USERAGENT, 'cloudns-whmcs/v'.$this->params['version'].'-'.$this->params['moduleVersion'].' - page: '.$this->params['page']);
+		curl_setopt($init, CURLOPT_USERAGENT, 'cloudns-whmcs/v'.$this->params['version'].'-'.$this->params['moduleVersion']);
 
 		$content = curl_exec($init);
 		
 		curl_close($init);
 		
 		$response = json_decode($content, true);
+		
+		$authData2 = array('auth-id' => $auth_id , 'auth-password' => $auth_password); 
+		$request2 = http_build_query(array_merge($authData2, $data)); 
+		logModuleCall('cloudns', $action, $request2, $response);
 		
 		if (isset($response['status'])) {
 			if ($response['status'] == 'Failed') {

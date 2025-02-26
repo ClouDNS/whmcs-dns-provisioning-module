@@ -379,9 +379,9 @@ value="{$uniHost}" autocapitalize="off" spellcheck="false"/>.{$shortName.shortNa
 			<div class="pull-right inputTitle fright dTitle">TXT Record:</div>
 			<div class="clear"></div>
 			<div class="pull-left inputTitle fleft mTitle">Responsible person (E-mail):</div>
-			<input type="text" id="editRecordMail" name="editRecordMail" class="pull-left fleft form-control" value="{$record.mail}" autocapitalize="off" spellcheck="false"/>
+			<input type="text" id="editRecordMail" name="editRecordMail" class="pull-left fleft form-control" value="{$record.mail|@htmlspecialchars}" autocapitalize="off" spellcheck="false"/>
 			<div class="pull-right inputTitle fleft mTitle"><br>TXT record:</div>
-			<input type="text" id="editRecordTxt" name="editRecordTxt" class="pull-right form-control fright" value="{$record.txt}" autocapitalize="off" spellcheck="false"/><br class="clear" />
+			<input type="text" id="editRecordTxt" name="editRecordTxt" class="pull-right form-control fright" value="{$record.txt|@htmlspecialchars}" autocapitalize="off" spellcheck="false"/><br class="clear" />
 		</div>
 	{elseif $record.type == 'CAA'}
 		<div class="CAA_fields type_fields">
@@ -406,7 +406,7 @@ value="{$uniHost}" autocapitalize="off" spellcheck="false"/>.{$shortName.shortNa
 			<div class="fleft inputSRV inputTitle dTitle">Value: <img src="./assets/img/help.gif" class="showTitle" title="The value given from your preferred CA or a value of your choice. It can be the CA hostname or mailto:you@your-mail.com, it depends on the Type and your needs." alt="[?]" /></div>
 			<div class="fleft inputSRV inputTitle mTitle">Value: <img src="./assets/img/help.gif" class="showTitle mTooltip" rel="popover" data-content="The value given from your preferred CA or a value of your choice. It can be the CA hostname or mailto:you@your-mail.com, it depends on the Type and your needs." alt="[?]" /></div>
 			<br />
-			<input type="text" id="editRecordCAAvalue" name="editRecordCAAvalue" value="{$record.caa_value}" class="form-control input-text editRecordField pointsTo" autocapitalize="off" spellcheck="false"/>
+			<input type="text" id="editRecordCAAvalue" name="editRecordCAAvalue" value="{$record.caa_value|@htmlspecialchars}" class="form-control input-text editRecordField pointsTo" autocapitalize="off" spellcheck="false"/>
 			<br class="clear" /><br />
 		</div>
 	{elseif $record.type == 'HINFO'}
@@ -415,9 +415,9 @@ value="{$uniHost}" autocapitalize="off" spellcheck="false"/>.{$shortName.shortNa
 			<div class="pull-right inputTitle fright dTitle">OS:</div>
 			<div class="clear"></div>
 			<div class="pull-left inputTitle fleft mTitle">CPU:</div>
-			<input type="text" id="editRecordCPU" name="editRecordCPU" class="pull-left fleft form-control" value="{$record.cpu}" autocapitalize="off" spellcheck="false"/>
+			<input type="text" id="editRecordCPU" name="editRecordCPU" class="pull-left fleft form-control" value="{$record.cpu|@htmlspecialchars}" autocapitalize="off" spellcheck="false"/>
 			<div class="pull-right inputTitle fleft mTitle"><br>OS:</div>
-			<input type="text" id="editRecordOS" name="editRecordOS" class="pull-right form-control fright" value="{$record.os}" autocapitalize="off" spellcheck="false"/><br class="clear" />
+			<input type="text" id="editRecordOS" name="editRecordOS" class="pull-right form-control fright" value="{$record.os|@htmlspecialchars}" autocapitalize="off" spellcheck="false"/><br class="clear" />
 		</div>
 	{elseif $record.type == 'LOC'}
 			<br />
@@ -431,11 +431,11 @@ value="{$uniHost}" autocapitalize="off" spellcheck="false"/>.{$shortName.shortNa
 			<div class="pull-right inputTitle fleft dTitle titleLOC">Direction:</div>
 			<div class="clear"></div>
 			<div class="pull-left inputTitle fleft mTitle">Degrees: <img src="./assets/img/help.gif" class="showTitle mobileInfo" title="0 - 90" alt="[?]" /></div>
-			<input type="text" id="editRecordLatDeg" name="editRecordLatDeg" value="{$record.lat_deg}" class="form-control pull-left fleft inputFirstLOC" autocapitalize="off" spellcheck="false"/>
+			<input type="text" id="editRecordLatDeg" name="editRecordLatDeg" value="{$record.lat_deg|@htmlspecialchars}" class="form-control pull-left fleft inputFirstLOC" autocapitalize="off" spellcheck="false"/>
 			<div class="pull-left inputTitle fleft mTitle">Minutes: <img src="./assets/img/help.gif" class="showTitle mobileInfo" title="0 - 59 If omitted will default to 0." alt="[?]" /></div>
-			<input type="text" id="editRecordLatMin" name="editRecordLatMin" value="{$record.lat_min}" class="form-control pull-left fleft inputLOC" autocapitalize="off" spellcheck="false"/>
+			<input type="text" id="editRecordLatMin" name="editRecordLatMin" value="{$record.lat_min|@htmlspecialchars}" class="form-control pull-left fleft inputLOC" autocapitalize="off" spellcheck="false"/>
 			<div class="pull-left inputTitle fleft mTitle">Seconds: <img src="./assets/img/help.gif" class="showTitle mobileInfo" title="0 - 59.999 If omitted will default to 0." alt="[?]" /></div>
-			<input type="text" id="editRecordLatSec" name="editRecordLatSec" value="{$record.lat_sec}" class="form-control pull-left fleft inputLOC" autocapitalize="off" spellcheck="false"/>
+			<input type="text" id="editRecordLatSec" name="editRecordLatSec" value="{$record.lat_sec|@htmlspecialchars}" class="form-control pull-left fleft inputLOC" autocapitalize="off" spellcheck="false"/>
 			<div class="pull-right inputTitle fleft mTitle selectLOC">Direction:</div>
 			<select id="editRecordLatDir" name="editRecordLatDir" class="form-control inputTitle selectLOC">
 				<option value="N" {if $record.lat_dir == 'N'}selected="selected"{/if}>North</option>
@@ -453,11 +453,11 @@ value="{$uniHost}" autocapitalize="off" spellcheck="false"/>.{$shortName.shortNa
 			<div class="pull-right inputTitle fleft dTitle titleLOC">Direction:</div>
 			<div class="clear"></div>
 			<div class="pull-left inputTitle fleft mTitle">Degrees: <img src="./assets/img/help.gif" class="showTitle mobileInfo" title="0 - 180" alt="[?]" /></div>
-			<input type="text" id="editRecordLongDeg" name="editRecordLongDeg" value="{$record.long_deg}" class="form-control pull-left fleft inputFirstLOC" autocapitalize="off" spellcheck="false"/>
+			<input type="text" id="editRecordLongDeg" name="editRecordLongDeg" value="{$record.long_deg|@htmlspecialchars}" class="form-control pull-left fleft inputFirstLOC" autocapitalize="off" spellcheck="false"/>
 			<div class="pull-left inputTitle fleft mTitle">Minutes: <img src="./assets/img/help.gif" class="showTitle mobileInfo" title="0 - 59 If omitted will default to 0." alt="[?]" /></div>
-			<input type="text" id="editRecordLongMin" name="editRecordLongMin" value="{$record.long_min}" class="form-control pull-left fleft inputLOC" autocapitalize="off" spellcheck="false"/>
+			<input type="text" id="editRecordLongMin" name="editRecordLongMin" value="{$record.long_min|@htmlspecialchars}" class="form-control pull-left fleft inputLOC" autocapitalize="off" spellcheck="false"/>
 			<div class="pull-left inputTitle fleft mTitle">Seconds: <img src="./assets/img/help.gif" class="showTitle mobileInfo" title="0 - 59.999 If omitted will default to 0." alt="[?]" /></div>
-			<input type="text" id="editRecordLongSec" name="editRecordLongSec" value="{$record.long_sec}" class="form-control pull-left fleft inputLOC" autocapitalize="off" spellcheck="false"/>
+			<input type="text" id="editRecordLongSec" name="editRecordLongSec" value="{$record.long_sec|@htmlspecialchars}" class="form-control pull-left fleft inputLOC" autocapitalize="off" spellcheck="false"/>
 			<div class="pull-right inputTitle fleft mTitle">Direction:</div>
 			<select id="editRecordLongDir" name="editRecordLongDir" class="form-control inputTitle selectLOC">
 				<option value="W" {if $record.long_dir == 'W'}selected="selected"{/if}>West</option>
@@ -475,13 +475,13 @@ value="{$uniHost}" autocapitalize="off" spellcheck="false"/>.{$shortName.shortNa
 			<div class="pull-right inputTitle fleft dTitle titleLOC">Vertical: <img src="./assets/img/help.gif" class="showTitle mobileInfo" title="0 - 90000000.00 If omitted, vertical precision defaults to 10." alt="[?]" /></div>
 			<div class="clear"></div>
 			<div class="pull-left inputTitle fleft mTitle">Altitude: <img src="./assets/img/help.gif" class="showTitle mobileInfo" title="-100000.00 - 42849672.95" alt="[?]" /></div>
-			<input type="text" id="editRecordAltitude" name="editRecordAltitude" value="{$record.altitude}" class="form-control pull-left fleft inputFirstLOC" autocapitalize="off" spellcheck="false"/>
+			<input type="text" id="editRecordAltitude" name="editRecordAltitude" value="{$record.altitude|@htmlspecialchars}" class="form-control pull-left fleft inputFirstLOC" autocapitalize="off" spellcheck="false"/>
 			<div class="pull-left inputTitle fleft mTitle">Size: <img src="./assets/img/help.gif" class="showTitle mobileInfo" title="0 - 90000000.00 If omitted, size defaults to 1." alt="[?]" /></div>
-			<input type="text" id="editRecordSize" name="editRecordSize" value="{$record.size}" class="form-control pull-left fleft inputLOC" autocapitalize="off" spellcheck="false"/>
+			<input type="text" id="editRecordSize" name="editRecordSize" value="{$record.size|@htmlspecialchars}" class="form-control pull-left fleft inputLOC" autocapitalize="off" spellcheck="false"/>
 			<div class="pull-left inputTitle fleft mTitle">Horizontal: <img src="./assets/img/help.gif" class="showTitle mobileInfo" title="0 - 90000000.00 If omitted, horizontal precision defaults to 10000." alt="[?]" /></div>
-			<input type="text" id="editRecordHPrecision" name="editRecordHPrecision" value="{$record.h_precision}" class="form-control pull-left fleft inputLOC" autocapitalize="off" spellcheck="false"/>
+			<input type="text" id="editRecordHPrecision" name="editRecordHPrecision" value="{$record.h_precision|@htmlspecialchars}" class="form-control pull-left fleft inputLOC" autocapitalize="off" spellcheck="false"/>
 			<div class="pull-right inputTitle fleft mTitle"><br>Vertical: <img src="./assets/img/help.gif" class="showTitle mobileInfo" title="0 - 90000000.00 If omitted, vertical precision defaults to 10." alt="[?]" /></div>
-			<input type="text" id="editRecordVPrecision" name="editRecordVPrecision" value="{$record.v_precision}" class="form-control pull-right fright inputLOC" autocapitalize="off" spellcheck="false"/><br class="clear" /><br />
+			<input type="text" id="editRecordVPrecision" name="editRecordVPrecision" value="{$record.v_precision|@htmlspecialchars}" class="form-control pull-right fright inputLOC" autocapitalize="off" spellcheck="false"/><br class="clear" /><br />
 		</div>
 	{/if}
 

@@ -26,7 +26,7 @@ class Cloudns_Zones {
 			$response = $this->core->Api->call('dns/get-zone-info.json', $request);
 			
 			$_SESSION['zoneInfo'] = array_merge($response, array('time'=>time()));
-			if (isset($response['status']) && $response['status'] == 0) {
+			if (isset($response['status']) && $response['status'] == 'error') {
 				return array();
 			}
 		} else {
@@ -62,13 +62,13 @@ class Cloudns_Zones {
 		if ($response['status'] == 'success') {
 			$response['zone'] = $zone;
 			if ($option == 3) {
-				$request = array('domain-name'=>$zone, 'from-domain'=>$templateZone, 'delete-current-records'=>'1');
+				$request = array('domain-name'=>$zone, 'from-domain'=>$templateZone, 'delete-current-records'=>'1', 'follow-domain' => '1');
 				$copy = $this->core->Api->call('dns/copy-records.json', $request);
 				if ($copy['status'] == 'error') {
 					logModuleCall('ClouDNS', 'copy-records-from-template-zone', 'Template zone: '.$templateZone, $copy['description']);
+						}
+					}
 				}
-			}
-		}
 		return $response;
 	}
 	

@@ -222,6 +222,9 @@ ul#cloudnsSettingsMenu {
 .pull-left {
 text-align: left;
 }
+.pull-right {
+text-align: right;
+}
 .fleft {
 float: left;
 }

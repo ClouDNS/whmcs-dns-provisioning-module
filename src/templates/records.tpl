@@ -55,13 +55,21 @@
 	{assign var="path" value="./assets/img/"}
 {/if}
 
+{if $error}
+	<div class="notification">You have reached your limit of {$recordsLimit} records per zone.</div><br />
+{/if}
+
 <form method="post" action="clientarea.php?action=productdetails&id={$serviceid}&customAction=zone-settings&zone={$zone}">
-	<div class="pull-left" style="padding-top: 3px;">Filter: &nbsp;</div> <select style="" name="recordsType" id="recordsType" class="form-control pull-left" onChange="this.form.submit();">
+	<div class="fleft" style="padding-top: 3px;">Filter: &nbsp;</div> <select style="" name="recordsType" id="recordsType" class="form-control pull-left" onChange="this.form.submit();">
 	<option value="all">All records</option>
 	{foreach from=$recordTypes key=key item=recordType}
 		<option value="{$recordType}" {if $recordType == $defaultType} selected="selected" {/if}>{if $recordType == 'WR'}Web Redirect{else}{$recordType}{/if}</option>
 	{/foreach}
 </select>
+
+{if $recordsCount gt '0'}
+	<div class="fright" style="padding-top: 3px;">Records Count: {$recordsCount}</div>
+{/if}
 </form>
 <div class="clear"></div>
 <br />
@@ -92,7 +100,7 @@
 {/if}
 {foreach from=$records item=record}
 	<tr>
-		<td class="overflow" title="{$record.shortHost.title}"><div class="overflowDiv"><div>{$record.shortHost.title}</div></div></td>
+		<td class="overflow" title="{$record.shortHost.title|@htmlspecialchars}"><div class="overflowDiv"><div>{$record.shortHost.title|@htmlspecialchars}</div></div></td>
 		<td>{$record.type}</td>
 		<td class="overflow" title="{$record.record|@htmlspecialchars}"><div class="overflowDiv overflowRecordRecord"><div>{$record.shortRecord.title|@htmlspecialchars}</div></div></td>
 		<td>{$record.ttl_seconds}</td>

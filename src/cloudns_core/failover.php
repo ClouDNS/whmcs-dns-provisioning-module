@@ -29,6 +29,8 @@ class Cloudns_Failover {
 	const CHECK_TYPE_TCP_SOCKET = 8;
 	const CHECK_TYPE_UDP_SOCKET = 9;
 	const CHECK_TYPE_DNS = 10;
+	const CHECK_TYPE_PING = 17;
+	const CHECK_TYPE_WEB = 18;
 
 	const CHECK_STATUS_UNKNOWN = -1;
 	const CHECK_STATUS_DOWN = 0;
@@ -50,17 +52,24 @@ class Cloudns_Failover {
 	const NOTIFICATION_TYPE_WEBHOOK_UP = 'webhook-up';
 	const NOTIFICATION_TYPE_WEBHOOK_DOWN = 'webhook-down';
 	
+	const PING_THRESHOLD_15 = 15;
+	const PING_THRESHOLD_25 = 25;
+	const PING_THRESHOLD_50 = 50;
+	const PING_THRESHOLD_100 = 100;	
+	
+	const MONITORING_PING_THRESHOLD = array(
+		Cloudns_Failover::PING_THRESHOLD_15,
+		Cloudns_Failover::PING_THRESHOLD_25,
+		Cloudns_Failover::PING_THRESHOLD_50,
+		Cloudns_Failover::PING_THRESHOLD_100,
+	);
+	
 	private $_checkTypes = array(
-		1=>'Ping (15% threshold)',
-		2=>'Ping (25% threshold)',
-		3=>'Ping (50% threshold)',
-		4=>'HTTP',
-		5=>'HTTPS',
-		6=>'HTTP custom string',
-		7=>'HTTPS custom string',
+		17=>'Ping',
+		18=>'Web',
 		8=>'TCP',
 		9=>'UDP',
-		10=>'DNS',
+		10=>'DNS'
 	);
 	
 	public function getCheckTypes () {

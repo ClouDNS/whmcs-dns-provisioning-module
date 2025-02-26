@@ -36,6 +36,22 @@ class Cloudns_Controller {
 				return array('status'=>'error','description'=>'You reached your zones limit of '.$this->params['zonesLimit'].', having '.$usersZones.' zones and can\'t add new zones.');
 			}
 			
+			if ($option == 3 && isset($this->params['templateZone'])) {
+				$recordsCount = $this->core->Records->getRecordsCount($this->params['templateZone']);
+			} elseif ($option == 1) {
+				$recordsCount = count($ns);
+				if ($recordsCount == 0) {
+					$servers = $this->core->Servers->getAvailableServers();
+					$recordsCount = count($servers);
+				}
+			} else {
+				$recordsCount = 0;
+			}
+			
+			if ($this->params['recordsLimit'] != '' && $this->params['recordsLimit'] != -1 && $recordsCount > $this->params['recordsLimit']) {
+				return array('status' => 'error', 'description' => 'You have reached your limit of ' . $this->params['recordsLimit'] . ' records per zone.');
+			}
+
 			if ($zoneType == 'masterZoneType' || $zoneType == 'masterReverseZoneType') {
 				$response = $this->core->Zones->addMaster($zone, $option, $ns, $zoneType);
 			} else {
@@ -92,6 +108,8 @@ class Cloudns_Controller {
 			return array('status'=>'error', 'description'=>'There is no such DNS zone with the DNS servers', 'zoneInfo'=>array('name'=>''));
 		} elseif ($this->params['registeredDomains'] != 'on' && empty($whmcsZone)) {
 			return array('status'=>'info', 'description'=>'There is no such DNS zone in the system', 'zoneInfo'=>array('name'=>''));
+		} elseif ($cloudnsZone['status'] == 0) {
+			return array('status'=>'paused', 'description'=>'Unfortunately, this zone is currently not accessible. Please contact our support team.', 'zoneInfo'=>$cloudnsZone);
 		}
 		
 		return array('status' => 'success', 'zoneInfo'=>$cloudnsZone);
@@ -486,5 +504,14 @@ class Cloudns_Controller {
 		}
 		
 		return $this->core->Records->delete($zone, $record_id);
+	}
+	
+	public function getRecordsCount ($zone) {
+		try {
+			$response = $this->core->Records->getRecordsCount($zone);
+			return $response;
+		} catch (\Exception $e) {
+			return array('status'=>'error','description'=>$e->getMessage());
+		}
 	}
 }

@@ -45,6 +45,14 @@ class Cloudns_Actions {
 	 * @return array
 	 */
 	public function addNewRecord($zoneInfo, $recordType) {
+		
+		// check records limit before creation
+		$recordsCount = $this->core->Controller->getRecordsCount($zoneInfo['name']);
+
+		if ($this->params['recordsLimit'] != '' && $this->params['recordsLimit'] != -1 && $recordsCount >= $this->params['recordsLimit']) {
+			return array('status' => 'error');
+		}
+		
 		if ($zoneInfo['zone'] == 'ipv4' || $zoneInfo['zone'] == 'ipv6') {
 			$zone_type = 'reverse';
 		} else {
@@ -83,7 +91,7 @@ class Cloudns_Actions {
 	// todo
 	public function doAddNewRecord($zoneInfo, $recordType, $settings) {
 		$zone = $zoneInfo['name'];
-
+		
 		$recordTypes = $this->core->Controller->getRecordTypes($zoneInfo['zone']);
 		$ttl = $this->core->Controller->getAvailableTTL();
 
@@ -256,6 +264,11 @@ class Cloudns_Actions {
 	 */
 	public function getSettings($zoneInfo, $type, $recordTypes, $failoverChecks, $productid) {
 		if (!empty($zoneInfo)) {
+			
+			if (isset($zoneInfo['status']) && $zoneInfo['status'] == '0') {
+				return array('response' => array('status' => $zoneInfo['status'], 'description' => 'The DNS zone ('.$zoneInfo['name'].') is currently unavailable, please contact Technical Support for assistance.'));
+			}
+			
 			if ($zoneInfo['type'] == 'master') {
 				return $this->getRecords($zoneInfo, $type, $recordTypes, $failoverChecks, $productid);
 			} else {
@@ -285,7 +298,7 @@ class Cloudns_Actions {
 		foreach ($records as &$row) {
 			$row['full_host'] = $this->core->Helper->getUnicodeName($row['host'] . (mb_strlen($row['host']) > 0 ? '.' : '') . $zoneInfo['name']);
 			$row['shortHost'] = $this->core->Helper->shortenLongName($row['host'] . (mb_strlen($row['host']) > 0 ? '.' : '') . $zoneInfo['name'], 24);
-
+						
 			if ($row['type'] == 'MX') {
 				$row['priority'] = $row['priority'] . ' ';
 			}
@@ -305,7 +318,7 @@ class Cloudns_Actions {
 			} elseif ($row['type'] == 'DS') {
 				$row['shortRecord'] = $this->core->Helper->shortenLongName($row['key_tag'].' '.$row['algorithm'].' '.$row['digest_type']. ' '.$row['record'], 30);
 			} elseif ($row['type'] == 'CERT') {
-				$row['shortRecord'] = $this->core->Helper->shortenLongName($row['cert_type'].' '.$row['key_tag'].' '.$row['algorithm']. ' '.$row['record'], 30);
+				$row['shortRecord'] = $this->core->Helper->shortenLongString($row['cert_type'].' '.$row['key_tag'].' '.$row['algorithm']. ' '.$row['record'], 24);
 			} elseif ($row['type'] == 'HINFO') {
 				$row['shortRecord'] = $this->core->Helper->shortenLongName($row['cpu'].' '.$row['os'], 30);
 			} elseif ($row['type'] == 'LOC') {
@@ -315,7 +328,7 @@ class Cloudns_Actions {
 			} else {
 				$row['shortRecord'] = $this->core->Helper->shortenLongName($row['record'], 24);
 			}
-
+			
 			$row['ttl_seconds'] = $this->core->Helper->convertSeconds($row['ttl']);
 		}
 
@@ -969,6 +982,8 @@ class Cloudns_Actions {
 			'cloudAction' => 'failover-monitoring-notifications',
 			'version' => $this->params['shortVersion'],
 			'theme' => $this->params['theme'],
+			'monitoringLog' => $monitoringLog,
+			'monitoringLogTable' => $monitoringLogTable,
 		);
 	}
 	

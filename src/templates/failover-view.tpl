@@ -88,6 +88,8 @@
 	$(document).ready (function() {
 		failoverChangeType();
 		zone_failoverChangeDownEvent();
+                toggleCustomStringOptions();
+                toggleProtocolOptions();
 		
 		var element = '.mTooltip';
 		$(element).popover({
@@ -136,6 +138,22 @@
 			$('#fo_up_handler_active').removeAttr('disabled');
 		}
 	}
+        
+        function toggleCustomStringOptions () {
+                if ($('#web_custom_string_yes').is(':checked')) {
+                        $('.customStringOptions').css('display', 'block');
+                } else {
+                        $('.customStringOptions').css('display', 'none');
+                }
+        }
+        
+        function toggleProtocolOptions () {
+                if ($('#web_protocol_https').is(':checked')) {
+                        $('.protocol-type').html('https');
+                } else if ($('#web_protocol_http').is(':checked')){
+                        $('.protocol-type').html('http');
+                }
+        }
 {/literal}
 </script>
 
@@ -179,6 +197,36 @@
 		</span>
 	</div>
 	<br class="clear">
+        <div class="flex monitoringType monitoringType{Cloudns_Failover::CHECK_TYPE_WEB} failover-notifications">
+		<label class="pull-left inputLabel fleft">Protocol:</label>
+                <div class="flex">
+                    <label class="w-50" onclick="toggleProtocolOptions();"><input class="inputRadio pull-left" type="radio" name="web_protocol" id="web_protocol_https" value="https" {if !isset($failover.check_settings.http_protocol) || isset($failover.check_settings.http_protocol) && $failover.check_settings.http_protocol == 'https'} checked="checked"{/if}> HTTPS</label>
+                    <label class="flex-element" onclick="toggleProtocolOptions();"><input class="inputRadio pull-left" type="radio" name="web_protocol" id="web_protocol_http" value="http" {if isset($failover.check_settings.http_protocol) && $failover.check_settings.http_protocol == 'http'} checked="checked"{/if}> HTTP</label>
+                </div>
+                <span class="info dTitle">
+			<img src="./assets/img/help.gif" class="showTitle" title="Choose your desired protocol" alt="[?]" />
+		</span>
+                <span class="info mTitle mobileInfo mTooltip" id="mTooltip" rel="popover" data-placement="bottom" data-content="Choose your desired protocol" alt="[?]">
+			<img src="./assets/img/help.gif">
+		</span>
+                <br class="clear">
+	</div>
+        <br class="clear monitoringType monitoringType{Cloudns_Failover::CHECK_TYPE_WEB}">
+        <div class="flex monitoringType monitoringType{Cloudns_Failover::CHECK_TYPE_WEB}">
+		<label class="pull-left inputLabel fleft">Custom string:</label>
+                <div class="flex">
+                    <label class="w-50" onclick="toggleCustomStringOptions();"><input class="inputRadio pull-left" type="radio" name="web_custom_string" id="web_custom_string_yes" value="1" {if isset($failover.check_settings.content) && $failover.check_settings.content != ''} checked="checked"{/if}> Yes</label>
+                    <label class="flex-element" onclick="toggleCustomStringOptions();"><input class="inputRadio pull-left" type="radio" name="web_custom_string" id="web_custom_string_no" value="0" {if !isset($failover.check_settings.content)} checked="checked"{/if}> No</label>
+                </div>
+                <span class="info dTitle">
+			<img src="./assets/img/help.gif" class="showTitle" title="If you want to check a custom string on the web page, mark YES" alt="[?]" />
+		</span>
+                <span class="info mTitle mobileInfo mTooltip" id="mTooltip" rel="popover" data-placement="bottom" data-content="If you want to check a custom string on the web page, mark YES" alt="[?]">
+			<img src="./assets/img/help.gif">
+		</span>
+                <br class="clear">
+	</div>
+        <br class="clear monitoringType monitoringType{Cloudns_Failover::CHECK_TYPE_WEB}">
 	
 	<div class="flex">
 		<label class="pull-left inputLabel fleft">Monitoring region:</label>
@@ -196,17 +244,17 @@
 	</div>
 	<br class="clear">
 
-	<div class="monitoringType monitoringType{Cloudns_Failover::CHECK_TYPE_HTTP} monitoringType{Cloudns_Failover::CHECK_TYPE_HTTPS} monitoringType{Cloudns_Failover::CHECK_TYPE_HTTP_CUSTOM} monitoringType{Cloudns_Failover::CHECK_TYPE_HTTPS_CUSTOM}">
+	<div class="monitoringType monitoringType{Cloudns_Failover::CHECK_TYPE_WEB}">
 		<label class="pull-left inputLabel fleft dTitle">URL to check:</label>
 		<label class="pull-left inputLabel fleft mTitle">Domain:</label>
 		<br class="clear">
 		<div class="flex">
-			http<span class="monitoringType monitoringType{Cloudns_Failover::CHECK_TYPE_HTTPS} monitoringType{Cloudns_Failover::CHECK_TYPE_HTTPS_CUSTOM}">s</span>://&nbsp;
+                        <span class="protocol-type">http</span><span class="monitoringType monitoringType{Cloudns_Failover::CHECK_TYPE_HTTPS} monitoringType{Cloudns_Failover::CHECK_TYPE_HTTPS_CUSTOM}">s</span>://&nbsp;
 			<input id="fo_http_host" name="fo_http_host" class="form-control fo-domain" value="{if isset($failover.check_settings.host)}{$failover.check_settings.host|@htmlspecialchars}{else}{$fullHost}{/if}" type="text" placeholder="FQDN"><span class="dTitle">&nbsp;:&nbsp;</span>
 			<label class="pull-left inputLabel fleft mTitle"><br>Port:</label>
-			<input id="fo_http_port" name="fo_http_port" class="form-control fo-port" type="text" value="{if isset($failover.check_settings.port)}{$failover.check_settings.port}{else}80{/if}" placeholder="port"><span class="dTitle">&nbsp;/&nbsp;</span>
+			<input id="fo_http_port" name="fo_http_port" class="form-control fo-port" type="text" value="{if isset($failover.check_settings.port)}{$failover.check_settings.port|@htmlspecialchars}{else}80{/if}" placeholder="port"><span class="dTitle">&nbsp;/&nbsp;</span>
 			<label class="pull-left inputLabel fleft mTitle"><br>Path:</label>
-			<input id="fo_http_path" name="fo_http_path" class="form-control fo-path" type="text" value="{if isset($failover.check_settings.path)}{$failover.check_settings.path}{else} {/if}" placeholder="Path">
+			<input id="fo_http_path" name="fo_http_path" class="form-control fo-path" type="text" value="{if isset($failover.check_settings.path)}{$failover.check_settings.path|@htmlspecialchars}{else} {/if}" placeholder="Path">
 			<span class="info dTitle">
 				<img src="./assets/img/help.gif" class="showTitle" title="The FQDN will be monitored on the main and backup IPs" alt="[?]" />
 			</span>
@@ -217,10 +265,10 @@
 		<br class="clear">
 	</div>
 	
-	<div class="monitoringType monitoringType{Cloudns_Failover::CHECK_TYPE_HTTP_CUSTOM} monitoringType{Cloudns_Failover::CHECK_TYPE_HTTPS_CUSTOM}">
+	<div class="monitoringType customStringOptions" style="display:none">
 		<div class="flex">
 			<label class="pull-left inputLabel fleft">String to match:</label>
-			<input id="fo_http_content" name="fo_http_content" type="text" class="input-text form-control" value="{if isset($failover.check_settings.content)}{$failover.check_settings.content}{else} {/if}" placeholder="OK">
+			<input id="fo_http_content" name="fo_http_content" type="text" class="input-text form-control" value="{if isset($failover.check_settings.content)}{$failover.check_settings.content|@htmlspecialchars}{else} {/if}" placeholder="OK">
 			<span class="info dTitle">
 				<img src="./assets/img/help.gif" class="showTitle" title="The content returned by the checked URL should be equal to this string." alt="[?]" />
 			</span>
@@ -230,11 +278,27 @@
 		</div>
 		<br class="clear">
 	</div>
+                        
+        <div class="flex monitoringType monitoringType{Cloudns_Failover::CHECK_TYPE_PING}">
+                <label class="pull-left inputLabel fleft">Threshold:</label>
+                <select id="fo_ping_threshold" name="fo_ping_threshold" class="pull-left form-control">
+                    {foreach Cloudns_Failover::MONITORING_PING_THRESHOLD as $threshold}
+			<option value="{$threshold}" {if isset($failover.check_settings.ping_threshold) && $failover.check_settings.ping_threshold == $threshold} selected="selected"{/if}>{$threshold}%</option>  
+                    {/foreach}
+                </select>
+                <span class="info dTitle">
+			<img src="./assets/img/help.gif" class="showTitle" title="Choose your preferred threshold for packet loss." alt="[?]" />
+		</span>
+                <span class="info mTitle mobileInfo mTooltip" id="mTooltip" rel="popover" data-placement="bottom" data-content="Choose your preferred threshold for packet loss." alt="[?]">
+			<img src="./assets/img/help.gif">
+		</span>
+	</div>
+        <br class="clear monitoringType monitoringType{Cloudns_Failover::CHECK_TYPE_PING}">
 	
 	<div class="monitoringType monitoringType{Cloudns_Failover::CHECK_TYPE_TCP_SOCKET} monitoringType{Cloudns_Failover::CHECK_TYPE_UDP_SOCKET}">
 		<div class="flex">
 			<label class="pull-left inputLabel fleft">Port:</label>
-			<input id="fo_port" name="fo_port" type="text" class="input-text form-control" value="{if isset($failover.check_settings.port)}{$failover.check_settings.port}{else} {/if}" placeholder="Port number">
+			<input id="fo_port" name="fo_port" type="text" class="input-text form-control" value="{if isset($failover.check_settings.port)}{$failover.check_settings.port|@htmlspecialchars}{else} {/if}" placeholder="Port number">
 			<span class="info dTitle">
 				<img src="./assets/img/help.gif" class="showTitle" title="The port number to which the TCP or UDP check will be made." alt="[?]" />
 			</span>

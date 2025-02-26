@@ -3,8 +3,8 @@
 class Cloudns_Configuration {
 	
 	// api user login details
-	public static $_apiAuthId =  175; // your ClouDNS API ID
-	public static $_apiAuthPassword = 'lanex24'; // your ClouDNS API password
+	public static $_apiAuthId =  0000; // your ClouDNS API ID
+	public static $_apiAuthPassword = 'XXXXXX'; // your ClouDNS API password
 
 	// servers to be used for all products different than the default ClouDNS servers
 	public static $_DnsServers = array(
@@ -22,7 +22,7 @@ class Cloudns_Configuration {
 	// depending on the WHMCS version it can either be
 	// a username or an email address
 	// you can check it in database table tbladmins
-	public static $_admin = 'support@cloudns.net';
+	public static $_admin = 'admin@example.com';
 	
 	/**
 	 * id of the product created for Free DNS management
@@ -30,7 +30,7 @@ class Cloudns_Configuration {
 	 * It will be automatically activated 1 
 	 * time after a successful domain registration.
 	 */
-	public static $_pid = 2;
+	public static $_pid = 0;
 	
 	/*
 	 * Do Not Edit Anything Below This Line

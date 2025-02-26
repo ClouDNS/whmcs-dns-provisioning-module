@@ -64,31 +64,31 @@
 	<table class="table">
 		<tr>
 			<th class="text-right">Serial:</th>
-			<td>{$soa.serialNumber}</td>
+			<td>{$soa.serialNumber|@htmlspecialchars}</td>
 		</tr>
 		<tr>
 			<th class="text-right">Primary NS:</th>
-			<td><input class="form-control" type="text" name="primaryNS" value="{$soa.primaryNS}" /></td>
+			<td><input class="form-control" type="text" name="primaryNS" value="{$soa.primaryNS|@htmlspecialchars}" /></td>
 		</tr>
 		<tr>
 			<th class="text-right">DNS admin e-mail:</th>
-			<td><input class="form-control" type="text" name="adminMail" value="{$soa.adminMail}" /></td>
+			<td><input class="form-control" type="text" name="adminMail" value="{$soa.adminMail|@htmlspecialchars}" /></td>
 		</tr>
 		<tr>
 			<th class="text-right">Refresh rate:</th>
-			<td><input class="form-control" type="text" name="refresh" value="{$soa.refresh}" /><small> From 1200 to 43200 seconds</small></td>
+			<td><input class="form-control" type="text" name="refresh" value="{$soa.refresh|@htmlspecialchars}" /><small> From 1200 to 43200 seconds</small></td>
 		</tr>
 		<tr>
 			<th class="text-right">Retry rate:</th>
-			<td><input class="form-control" type="text" name="retry" value="{$soa.retry}" /><small> From 180 to 2419200 seconds</small></td>
+			<td><input class="form-control" type="text" name="retry" value="{$soa.retry|@htmlspecialchars}" /><small> From 180 to 2419200 seconds</small></td>
 		</tr>
 		<tr>
 			<th class="text-right">Expire time:</th>
-			<td><input class="form-control" type="text" name="expire" value="{$soa.expire}" /><span><small> From 1209600 to 2419200 seconds</small></span></td>
+			<td><input class="form-control" type="text" name="expire" value="{$soa.expire|@htmlspecialchars}" /><span><small> From 1209600 to 2419200 seconds</small></span></td>
 		</tr>
 		<tr>
 			<th class="text-right">Default TTL:</th>
-			<td><input class="form-control" type="text" name="defaultTTL" value="{$soa.defaultTTL}" /></td>
+			<td><input class="form-control" type="text" name="defaultTTL" value="{$soa.defaultTTL|@htmlspecialchars}" /></td>
 		</tr>
 		<tr>
 			<th></th>
