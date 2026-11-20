@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ClouDNS DNS Manager v1.8
+ * ClouDNS DNS Manager v1.9
  */
 
 if (!defined("WHMCS")) {

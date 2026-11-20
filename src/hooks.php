@@ -25,15 +25,25 @@ add_hook('ClientAreaPrimarySidebar', 1, function ($menu) {
 
 	// add "DNS Management" button in clientarea.php?action=domaindetails&id=x
 	if (!is_null($menu->getChild('Domain Details Management'))) {
-		$domainId = intval($_GET['id']);
+		$domainId = isset($_GET['id']) ? intval($_GET['id']) : 0;
+		if ($domainId <= 0) {
+			return;
+		}
+
 		$domainDetails = Capsule::table('tbldomains')
 			->where('id', $domainId)
 			->first();
+		if (!$domainDetails) {
+			return;
+		}
 			
 		$domainName = $domainDetails->domain;
 		$cloudnsZone = Capsule::table('mod_cloudns_zones')
 			->where('name', $domainName)
 			->first();
+		if (!$cloudnsZone) {
+			return;
+		}
 			
 		$menu->getChild('Domain Details Management')
 			->addChild('DNS Management')
