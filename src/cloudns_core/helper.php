@@ -83,7 +83,7 @@ Class Cloudns_Helper {
 	 * @return string
 	 */
 	public function getAsciiName ($name) {
-		if (function_exists('idn_to_ascii')) {
+		if ($name!='' && function_exists('idn_to_ascii')) {
 			$convertedName = @idn_to_ascii($name);
 		} else {
 			$convertedName = $name;
@@ -101,7 +101,7 @@ Class Cloudns_Helper {
 	 * @return string
 	 */
 	public function getUnicodeName ($name) {
-		if (function_exists('idn_to_utf8')) {
+		if ($name!='' && function_exists('idn_to_utf8')) {
 			return idn_to_utf8($name);
 		}
 		

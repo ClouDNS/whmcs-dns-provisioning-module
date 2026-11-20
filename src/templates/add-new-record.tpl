@@ -83,7 +83,8 @@
 		#recordsForm .HINFO_fields div,
 		#recordsForm .LOC_fields input,
 		#recordsForm .LOC_fields div,
-		#recordsForm .NAPTR_fields input{
+		#recordsForm .NAPTR_fields input,
+		#recordsForm .SVCBHTTPS_fields input{
 			width: 100% !important;
 			margin-left: 0 !important;
 		}
@@ -186,7 +187,7 @@
 	<div class="pull-left inputTitle fleft mTitle"><br> Host:  <span class="info OPENPGPKEY_fields type_fields"><img src="./assets/img/help.gif" class="showTitle" title="The hashed representation of the local-part of the email address using the SHA2-256 algorithm followed by ._openpgpkey" alt="[?]"/></span><small class="OPENPGPKEY_fields type_fields">(e.g.: &lt;hash&gt;._openpgpkey)</small><small class="SRV_fields type_fields">(_service._protocol e.g.: _sip._tcp)</small><small class="TLSA_fields type_fields">(_port._protocol e.g.: _100._tcp)</small></div>
 	<span class="spanHost"><input type="text" id="addRecordHost" name="addRecordHost" class="form-control" value="{if isset($settings.host)}{$settings.host}{/if}" autocapitalize="off" spellcheck="false"/>.{$shortName.shortName}</span><br class="dTitle">
 	
-	<small class="A_fields AAAA_fields MX_fields TXT_fields SPF_fields NS_fields WR_fields RP_fields SSHFP_fields CAA_fields type_fields">Leave empty for {$zone}<br /></small>
+	<small class="A_fields AAAA_fields MX_fields SVCB_fields HTTPS_fields TXT_fields SPF_fields NS_fields WR_fields RP_fields SSHFP_fields CAA_fields type_fields">Leave empty for {$zone}<br /></small>
 	
 	
 	<div class="SRV_fields SRV_fields type_fields"><br />
@@ -203,7 +204,7 @@
 		<br class="clear" />
 	</div>
 	
-	
+
 	<div class="MX_fields type_fields"><br />
 		<div>Priority:</div>
 		<input type="text" id="addRecordMXPriority" name="addRecordMXPriority" value="{if isset($settings.addRecordMXPriority)}{$settings.addRecordMXPriority}{else}10{/if}" class="input-text form-control" autocapitalize="off" spellcheck="false"/><br />
@@ -381,6 +382,12 @@
 			<option value="2" {if $settings['smimea-matching-type'] == 2}selected="selected"{/if}>(2) SHA-512: SHA-512 hash</option>
 		</select><br class="clear" />
 	</div>
+
+	<div class="SVCB_fields HTTPS_fields type_fields"><br />
+		<div>Priority: <span class="info SVCB_fields HTTPS_fields type_fields"><img src="./assets/img/help.gif" class="showTitle" title="0 - 65535" alt="[?]"/></span></div>
+		<input type="text" id="addRecordPriority" name="addRecordPriority" value="{if isset($settings.addRecordPriority)}{$settings.addRecordPriority}{else}0{/if}" class="input-text form-control" autocapitalize="off" spellcheck="false"/><br />
+	</div>
+	
 	<br class="clear" />
 	<div class="recordContainter">
 		<div class="inputTitle records-label">Points to:</div>
@@ -388,6 +395,12 @@
 		<div class="inputTitle SMIMEA_fields type_fields">Certificate:</div>
 		<input type="text" id="addRecordRecord" name="addRecordRecord" value="{if isset($settings.record)}{$settings.record|@htmlspecialchars}{/if}" class="pointsTo form-control" autocapitalize="off" spellcheck="false"/> <span class="WR_fields type_fields"><small>Example: http://google.com</small></span><br /><br />
 	</div>
+
+	<div class="SVCB_fields HTTPS_fields type_fields"><br />
+		<div>Parameters: <span class="info SVCB_fields HTTPS_fields type_fields"><img src="./assets/img/help.gif" class="showTitle" title="Parameters" alt="[?]"/></span></div>
+		<input type="text" id="addRecordParameters" name="addRecordParameters" value="{if isset($settings.addRecordParameters)}{$settings.addRecordParameters}{else}{/if}" class="input-text form-control" autocapitalize="off" spellcheck="false"/><br />
+	</div>
+	<br class="clear" />
 	
 	<div class="WR_fields type_fields">
 		<div><label style="width: 100%;"><input class="pull-left" type="checkbox" id="addRecordWRFrame" name="addRecordWRFrame" value="1" style="width:15px !important;" onClick="toggleOptions('WRFrameOptions');" />Redirect with frame</label></div>
@@ -436,6 +449,10 @@
 			<option value="issue" {if $settings.caa_type == 'issue'}selected="selected"{/if}>issue</option>
 			<option value="issuewild" {if $settings.caa_type == 'issuewild'}selected="selected"{/if}>issuewild</option>
 			<option value="iodef" {if $settings.caa_type == 'iodef'}selected="selected"{/if}>iodef</option>
+			<option value="issuemail" {if $settings.caa_type == 'issuemail'}selected="selected"{/if}>issuemail</option>
+			<option value="issuevmc" {if $settings.caa_type == 'issuevmc'}selected="selected"{/if}>issuevmc</option>
+			<option value="contactemail" {if $settings.caa_type == 'contactemail'}selected="selected"{/if}>contactemail</option>
+			<option value="contactphone" {if $settings.caa_type == 'contactphone'}selected="selected"{/if}>contactphone</option>
 		</select>
 		<br class="clear" />
 	</div>

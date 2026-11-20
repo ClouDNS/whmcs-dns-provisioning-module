@@ -26,6 +26,7 @@ class Cloudns_Database {
 						'name' => $row->domain,
 						'serviceid' => '',
 						'userid' => $row->userid,
+						'status' => $row->status,
 					);
 				} elseif ($table == 'tblproducts') {
 					$response[] = array(
@@ -58,6 +59,7 @@ class Cloudns_Database {
 						'name' => $row['domain'],
 						'serviceid' => '',
 						'userid' => $row['userid'],
+						'status' => $row['status'],
 					);
 				} elseif ($table == 'tblproducts') {
 					$response[] = array(

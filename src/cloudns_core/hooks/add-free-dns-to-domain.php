@@ -33,6 +33,11 @@ $tblParams = array(
 	'domain' => $domain,
 );
 $tbldomains = $cloudns->Database->select('tbldomains', $tblParams, 'id');
+
+if (empty($tbldomains) || !in_array($tbldomains[0]['status'], array('Active', 'Pending Transfer'))) {
+	return;
+}
+
 $userid = $tbldomains[0]['userid'];
 
 // data to be send

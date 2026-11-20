@@ -54,7 +54,7 @@ class Cloudns_Core {
 			'templateZone'=>$params['configoption4'],	// domain name or empty, if not empty new zones will be added with its records
 			'failoverChecks'=>$params['configoption5'],	// number of Failover chekcs
 			'recordsLimit' => $params['configoption6'],	// limit of records
-			'moduleVersion'=>'1.8',
+			'moduleVersion'=>'1.9',
 			'productid'=>$params['pid'],
 		);
 	}
