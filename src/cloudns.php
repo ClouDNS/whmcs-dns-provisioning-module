@@ -231,6 +231,10 @@ function cloudns_ClientArea ($params) {
 			if (isset($zoneExists['status']) && ($requestedAction != 'add-existing-zone' && $requestedAction != 'add-zone')) {
 				// the zone doesn't exist in ClouDNS
 				if ($zoneExists['status'] == 'error' || $zoneExists['status'] == 'info') {
+					if ($params['configoption3'] == 'on' && empty($cloudns->Controller->getRegisteredDomainByName($zone))) {
+						$cloudns->Helper->redirect("clientarea.php?action=productdetails&id={$params['serviceid']}");
+					}
+						
 						
 					$cloudns->Helper->redirect("clientarea.php?action=productdetails&id={$params['serviceid']}&customAction=add-existing-zone&zone={$zone}");
 				// the zone doesn't exist here
@@ -249,7 +253,8 @@ function cloudns_ClientArea ($params) {
 		} elseif (!empty($zone) && (!isset($zoneOwnership[0]['serviceid']) || (isset($zoneOwnership[0]['serviceid']) && $zoneOwnership[0]['serviceid'] != $params['serviceid']))) {
 			
 			if ($params['configoption3'] == 'on') {
-				$domain = $cloudns->Controller->getRegisteredDomainByName($zoneInfo['name']);
+				$domainName = !empty($zoneInfo['name']) ? $zoneInfo['name'] : $zone;
+				$domain = $cloudns->Controller->getRegisteredDomainByName($domainName);
 				if (empty($domain) && ($requestedAction != 'add-existing-zone' && $requestedAction != 'add-zone')) {
 					$cloudns->Helper->redirect("clientarea.php?action=productdetails&id={$params['serviceid']}");
 				}
@@ -303,7 +308,6 @@ function cloudns_ClientArea ($params) {
 			if (!empty($sufix)) {
 				$zone = $zone.'.'.$sufix;
 			}
-			
 			$response = $cloudns->Controller->addNewZone($zone, $zoneType, $option, $servers, $masterIP, $zoneExists);
 			if ($response['status'] == 'success') {
 				$cloudns->Helper->redirect("clientarea.php?action=productdetails&id={$params['serviceid']}&customAction=zone-settings&zone={$response['zone']}");
@@ -320,6 +324,10 @@ function cloudns_ClientArea ($params) {
 			$templateFile = 'templates/add-new-zone.tpl';
 			
 		} elseif ($requestedAction == 'add-existing-zone') {
+			if ($params['configoption3'] == 'on' && empty($cloudns->Controller->getRegisteredDomainByName($zone))) {
+				$cloudns->Helper->redirect("clientarea.php?action=productdetails&id={$params['serviceid']}");
+			}
+			
 			if ($cloudns->Controller->defaultZone()) {
 				$option = 3;
 			} else {
@@ -471,8 +479,10 @@ function cloudns_ClientArea ($params) {
 				$settings['smimea-usage'] = $cloudns->Helper->getPost('addRecordSmimeaUsage');
 				$settings['smimea-selector'] = $cloudns->Helper->getPost('addRecordSmimeaSelector');
 				$settings['smimea-matching-type'] = $cloudns->Helper->getPost('addRecordSmimeaMatchingType');
-			}
-			
+				} else if ($recordType == 'SVCB' || $recordType == 'HTTPS') {
+					$settings['priority'] = $cloudns->Helper->getPost('addRecordPriority');
+					$settings['parameters'] = html_entity_decode($cloudns->Helper->getPost('addRecordParameters'), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+				}
 			$templateVariables = $cloudns->Actions->doAddNewRecord($zoneInfo, $recordType, $settings);
 			$templateFile = 'templates/add-new-record.tpl';
 			
@@ -834,8 +844,10 @@ function cloudns_ClientArea ($params) {
 				$settings['smimea-usage'] = $cloudns->Helper->getPost('editRecordSmimeaUsage');
 				$settings['smimea-selector'] = $cloudns->Helper->getPost('editRecordSmimeaSelector');
 				$settings['smimea-matching-type'] = $cloudns->Helper->getPost('editRecordSmimeaMatchingType');
-			}
-			
+				} else if ($recordType == 'SVCB' || $recordType == 'HTTPS') {
+					$settings['priority'] = $cloudns->Helper->getPost('editRecordPriority');
+					$settings['parameters'] = html_entity_decode($cloudns->Helper->getPost('editRecordParameters'), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+				}
 			$templateVariables = $cloudns->Actions->doEditRecord($zoneInfo, $record_id, $settings, $status, $recordType);
 
 			$templateFile = 'templates/edit-record.tpl';
@@ -911,7 +923,7 @@ function cloudns_ClientArea ($params) {
 						'cloudAction' => 'import',
 					);
 				}
-				$format = $cloudns->Helper->getPost('format');
+				$format = $cloudns->Helper->getPost('type');
 				$records = html_entity_decode($cloudns->Helper->getPost('recordsList'));
 				
 				$templateVariables = $cloudns->Actions->importRecords($zone, $records, $delete, $format);

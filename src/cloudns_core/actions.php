@@ -325,6 +325,8 @@ class Cloudns_Actions {
 				$row['shortRecord'] = $this->core->Helper->shortenLongName($row['lat_deg'].' '.$row['lat_min'].' '.$row['lat_sec'].' '.strtoupper($row['lat_dir']).' '.$row['long_deg'].' '.$row['long_min'].' '.$row['long_sec'].' '.strtoupper($row['long_dir']).' '.$row['altitude'].' '.$row['size'].' '.$row['h_precision'].' '.$row['v_precision'], 30);
 			} elseif ($row['type'] == 'SMIMEA') {
 				$row['shortRecord'] = $this->core->Helper->shortenLongString($row['smimea_usage'].' '.$row['smimea_selector'].' '.$row['smimea_matching_type']. ' '.$row['record'], 30);
+			} elseif ($row['type'] == 'HTTPS' || $row['type'] == 'SVCB') {
+				$row['shortRecord'] = $this->core->Helper->shortenLongString($row['priority'].' '.$row['record'].' '.$row['parameters'], 30);
 			} else {
 				$row['shortRecord'] = $this->core->Helper->shortenLongName($row['record'], 24);
 			}

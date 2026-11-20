@@ -62,6 +62,8 @@
 		#recordsForm #editRecordHost,
 		#recordsForm .pointsTo,
 		#recordsForm .MX_fields input,
+		#recordsForm .SVCB_fields input,
+		#recordsForm .HTTPS_fields input,
 		#recordsForm .inputSRV,
 		#recordsForm div.inputSRV.srvInputTitle,
 		#recordsForm .inputTitle,
@@ -220,6 +222,7 @@ value="{$uniHost}" autocapitalize="off" spellcheck="false"/>.{$shortName.shortNa
 			</select><br class="clear">
 		</div>
 	{/if}
+	
 	{if $record.type == 'TLSA'}
 		<br>
 		<div class="pull-left inputTLSA tlsaInputTitle fleft tlsaTitleD">Usage:</div>
@@ -345,10 +348,18 @@ value="{$uniHost}" autocapitalize="off" spellcheck="false"/>.{$shortName.shortNa
 			<option value="2" {if $record.smimea_matching_type == 2}selected="selected"{/if}>(2) SHA-512: SHA-512 hash</option>
 		</select><br class="clear" />
 	{/if}
+	{if $record.type == 'SVCB' || $record.type == 'HTTPS'}
+		<br /><div>Priority: <span class="info SVCB_fields HTTPS_fields type_fields"><img src="./assets/img/help.gif" class="showTitle" title="0 - 65535" alt="[?]"/></span></div><input type="text" id="editRecordPriority" name="editRecordPriority" class="input-text form-control editRecordField" value="{$record.priority}" autocapitalize="off" spellcheck="false"/><br />
+	{/if}
+	
 	{if $record.type != 'RP' && $record.type != 'NAPTR' && $record.type != 'CAA' && $record.type != 'HINFO' && $record.type != 'LOC'}
 		<br class="clear" /><div>{if $record.type == 'OPENPGPKEY'}PGP key{elseif $record.type == 'SMIMEA'}Certificate{else}Points to:{/if}</div>
 		<input type="text" id="editRecordRecord" name="editRecordRecord" value="{$record.record|@htmlspecialchars}" class="input-text editRecordField pointsTo form-control" autocapitalize="off" spellcheck="false"/> 
 		{if $record.type == 'WR'}Example: http://google.com{/if}<br />
+	{/if}
+
+	{if $record.type == 'SVCB' || $record.type == 'HTTPS'}
+		<br /><div>Parameters: <span class="info SVCB_fields HTTPS_fields type_fields"><img src="./assets/img/help.gif" class="showTitle" title="Parameters" alt="[?]"/></span></div><input type="text" id="editRecordParameters" name="editRecordParameters" class="input-text form-control editRecordField" value="{if isset($record.parameters)}{$record.parameters|@htmlspecialchars}{/if}" autocapitalize="off" spellcheck="false"/><br />
 	{/if}
 	
 	{if $record.type == 'WR'}
@@ -398,6 +409,10 @@ value="{$uniHost}" autocapitalize="off" spellcheck="false"/>.{$shortName.shortNa
 				<option value="issue" {if $record.caa_type == 'issue'}selected="selected"{/if}>issue</option>
 				<option value="issuewild" {if $record.caa_type == 'issuewild'}selected="selected"{/if}>issuewild</option>
 				<option value="iodef" {if $record.caa_type == 'iodef'}selected="selected"{/if}>iodef</option>
+				<option value="issuemail" {if $settings.caa_type == 'issuemail'}selected="selected"{/if}>issuemail</option>
+				<option value="issuevmc" {if $settings.caa_type == 'issuevmc'}selected="selected"{/if}>issuevmc</option>
+				<option value="contactemail" {if $settings.caa_type == 'contactemail'}selected="selected"{/if}>contactemail</option>
+				<option value="contactphone" {if $settings.caa_type == 'contactphone'}selected="selected"{/if}>contactphone</option>
 			</select>
 			<br class="clear" />
 		</div>

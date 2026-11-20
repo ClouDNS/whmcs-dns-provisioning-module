@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 add_hook('ClientAreaPrimarySidebar', 1, function ($menu) {
@@ -22,19 +23,24 @@ add_hook('ClientAreaPrimarySidebar', 1, function ($menu) {
 			->removeChild('Information');
 	}
 
-// add "DNS Management" button in clientarea.php?action=domaindetails&id=x
+	// add "DNS Management" button in clientarea.php?action=domaindetails&id=x
 	if (!is_null($menu->getChild('Domain Details Management'))) {
-	    $domainId = intval($_GET['id']);
-	    $domainDetails = Capsule::table('tbldomains')
-            ->where('id', $domainId)
-            ->first();
-	    $domainName = $domainDetails->domain;	
-        $menu->getChild('Domain Details Management')
-        ->addChild('DNS Management')
-        ->setLabel('DNS Management')
-        ->setUri('/clientarea.php?action=productdetails&id=1&customAction=zone-settings&zone='.$domainName)
-        ->setOrder(100);
-    }
-
+		$domainId = intval($_GET['id']);
+		$domainDetails = Capsule::table('tbldomains')
+			->where('id', $domainId)
+			->first();
+			
+		$domainName = $domainDetails->domain;
+		$cloudnsZone = Capsule::table('mod_cloudns_zones')
+			->where('name', $domainName)
+			->first();
+			
+		$menu->getChild('Domain Details Management')
+			->addChild('DNS Management')
+			->setLabel('DNS Management')
+			->setUri('/clientarea.php?action=productdetails&id='.$cloudnsZone->serviceid.'&customAction=zone-settings&zone='.$domainName)
+			->setOrder(100);
+	}
+	
 });
 

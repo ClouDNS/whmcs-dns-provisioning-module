@@ -28,6 +28,10 @@ class Cloudns_Controller {
 	public function addNewZone ($zone, $zoneType, $option, $ns, $master_ip, $zoneExists) {
 		
 		try {
+			if ($this->params['registeredDomains'] == 'on' && empty($this->getRegisteredDomainByName($zone))) {
+				return array('status'=>'error','description'=>'DNS zones can be created only for active domains or pending transfers.');
+			}
+			
 			if (!empty($zoneExists['zoneInfo']['name'])) {
 				return array('status'=>'error','description'=>'The zone was already added by you or another customer!');
 			}
@@ -84,6 +88,10 @@ class Cloudns_Controller {
 	 */
 	public function addNewExistingZone ($zone, $option) {
 		try {
+			if ($this->params['registeredDomains'] == 'on' && empty($this->getRegisteredDomainByName($zone))) {
+				return array('status'=>'error','description'=>'DNS zones can be created only for active domains or pending transfers.');
+			}
+			
 			$ns = array();
 			$servers = $this->core->Servers->getAvailableServers();
 			foreach ($servers as $server) {
@@ -355,11 +363,15 @@ class Cloudns_Controller {
 		try {
 			$tbl_params = array(
 				'userid' => $this->params['userid'],
-				'status' => 'Active',
 				'domain' => $domain
 			);
 			
 			$domains = $this->core->Database->select('tbldomains', $tbl_params, 'id');
+			foreach ($domains as $key => $domain) {
+				if (!in_array($domain['status'], array('Active', 'Pending Transfer'))) {
+					unset($domains[$key]);
+				}
+			}
 
 			return $domains;
 
